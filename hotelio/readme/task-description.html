@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .hw-card {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            background: #fafafa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .hw-card h1 {
+            margin-top: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .hw-card h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 20px 0 10px;
+        }
+
+        .hw-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 16px 0 8px;
+        }
+
+        .hw-card p {
+            margin: 10px 0;
+        }
+
+        .hw-card ul, .hw-card ol {
+            margin: 6px 0;
+            padding-left: 22px;
+        }
+
+        .hw-card li {
+            margin-bottom: 6px;
+        }
+
+        .hw-card li ul {
+            margin-top: 4px;
+        }
+
+        .hw-card strong {
+            font-weight: 600;
+        }
+
+        .hw-card em {
+            font-style: italic;
+            color: #555;
+        }
+
+        .hw-card code {
+            background: #eef1f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+            font-size: 0.92em;
+        }
+
+        .hw-card pre {
+            background: #1e1e1e;
+            color: #e6e6e6;
+            padding: 12px 14px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .hw-card pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        .hw-card__note {
+            margin-top: 16px;
+            padding: 10px 14px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #664d03;
+        }
+
+        .hw-card__quiz {
+            margin: 16px 0;
+            padding: 14px 16px;
+            background: #eef4ea;
+            border-left: 4px solid #a6bfa3;
+            border-radius: 6px;
+        }
+
+        .hw-card__quiz p {
+            margin: 6px 0;
+        }
+
+        .hw-card__quiz ul {
+            margin: 6px 0 0;
+        }
+
+        .hw-card__task {
+            margin: 20px 0;
+            border: 1px solid #d6dde3;
+            border-radius: 10px;
+            background: #ffffff;
+        }
+
+        .hw-card__task-title {
+            margin: 0;
+            padding: 12px 16px;
+            background: #eef3f7;
+            border-bottom: 1px solid #d6dde3;
+            border-radius: 10px 10px 0 0;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .hw-card__task-body {
+            padding: 12px 16px;
+        }
+
+        .hw-card__task-body h2 {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="hw-card">
+    <h1>Проектная работа по разбивке монолитной системы на микросервисы с применением DevOps-практик</h1>
+
+    <p>Для работы будет использован кейс компании Hotelio.</p>
+    <p>Hotelio — онлайн-платформа для бронирования отелей и апартаментов. У неё около 1 млн зарегистрированных
+        пользователей и основной трафик приходится на поиск и бронирование жилья. Система построена на <strong>Java-монолите</strong>,
+        который обеспечивает API для клиентов и партнёрских каналов.</p>
+
+    <h3>Проблематика</h3>
+    <p>Сервис Hotelio реализован как единое приложение, в котором все бизнес-функции собраны в одном коде,
+        разворачиваются как единый сервис и используют одну базу данных.</p>
+    <p>С ростом бизнеса возникли серьёзные архитектурные и операционные проблемы. Команда приняла решение о переходе на
+        микросервисную архитектуру с постепенным выносом сервисов.</p>
+
+    <h2>Текущие проблемы</h2>
+    <ol>
+        <li><strong>Сложность сопровождения</strong>
+            <ul>
+                <li>Любое изменение требует понимания всей кодовой базы.</li>
+                <li>Невозможно менять один модуль, не затрагивая другие.</li>
+            </ul>
+        </li>
+        <li><strong>Низкая масштабируемость</strong>
+            <ul>
+                <li>При пиковых нагрузках (например, на бронирование) нельзя масштабировать только нужный компонент.
+                </li>
+                <li>Производительность неравномерна.</li>
+            </ul>
+        </li>
+        <li><strong>Невозможность гибкой разработки</strong>
+            <ul>
+                <li>Разные команды не могут работать независимо.</li>
+                <li>Трудно внедрить быстрый CI/CD.</li>
+            </ul>
+        </li>
+        <li><strong>Ограничения на фронтенде</strong>
+            <ul>
+                <li>REST API монолита слишком универсален и плохо адаптируется под разные платформы.</li>
+                <li>Нет поддержки BFF.</li>
+            </ul>
+        </li>
+        <li><strong>Сложности с запуском новых фич</strong>
+            <ul>
+                <li>Большой риск ошибок из-за плотной связанности.</li>
+                <li>Тестирование требует понимания всех зависимостей.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <p>Вам как раз предстоит более детально проанализировать архитектуру системы и выделить наиболее критичные
+        проблемы.</p>
+
+    <h3>Лендскейп компании</h3>
+    <p><strong>Структура IT-отдела:</strong></p>
+    <ul>
+        <li>два разработчика на Java;</li>
+        <li>архитектор, который в том числе пишет код;</li>
+        <li>фронтенд-разработчик;</li>
+        <li>DevOps-инженер;</li>
+        <li>тестировщик;</li>
+        <li>продукт-менеджер.</li>
+    </ul>
+
+    <p><strong>Текущая инфраструктура:</strong></p>
+    <ul>
+        <li>Java Spring Boot (монолит и сервисы);</li>
+        <li>PostgreSQL;</li>
+        <li>Kafka;</li>
+        <li>Docker.</li>
+    </ul>
+
+    <h3>Архитектура системы</h3>
+    <img src="hotelio.png" alt="Схема архитектуры" style="max-width: 100%">
+
+    <p><strong>Назначение модулей:</strong></p>
+    <ul>
+        <li><code>BookingService</code> — обрабатывает создание бронирований. Выполняет все проверки: пользователя,
+            отеля, промокода, отзывов. Вычисляет финальную цену, скидку и сохраняет результат.
+        </li>
+        <li><code>UserService</code> — проверяет статус пользователя: активен ли он, не находится ли в чёрном списке. И
+            возвращает его статус.
+        </li>
+        <li><code>HotelService</code> — предоставляет информацию об отелях. Используется для валидации бронирования и
+            отображения информации в интерфейсе.
+        </li>
+        <li><code>PromoCodeService</code> — проверяет промокоды: действительность, применимость к конкретному
+            пользователю.
+        </li>
+        <li><code>ReviewService</code> — отвечает за отзывы и рейтинг отеля. Влияет на возможность бронирования, если у
+            отеля плохая репутация.
+        </li>
+    </ul>
+
+    <h3>Цели бизнеса</h3>
+    <p>Начать <strong>поэтапный переход</strong> к микросервисной архитектуре, применяя паттерн Strangler Fig, —
+        выносить по одному компоненту, оставляя остальной функционал в монолите. Это позволит упростить масштабирование,
+        снизить время выхода фич, повысить отказоустойчивость и упростить независимую разработку разных команд.</p>
+
+    <p><strong>Финальное целевое состояние через год:</strong></p>
+    <ul>
+        <li>Полный переход на микросервисную архитектуру.</li>
+        <li>Service mesh с автоматизированными rollouts.</li>
+        <li>Масштабируемая Kafka-инфраструктура.</li>
+        <li>Метрики и трассировка на каждый сервис.</li>
+        <li>GraphQL для фронтенда.</li>
+    </ul>
+
+    <div class="hw-card__quiz">
+        <p>В рамках проектной работы нужно спроектировать изменения в ближайшей перспективе. А именно промежуточное
+            состояние через пару месяцев:</p>
+        <ul>
+            <li>Мигрировано несколько сервисов.</li>
+            <li>Старые сервисы не дорабатываются.</li>
+            <li>Новая функциональность пишется только уже в мигрированных сервисах.</li>
+            <li>Начато разделение баз для балансировки нагрузки и переезда в облако.</li>
+        </ul>
+    </div>
+
+    <h1>Что нужно сделать</h1>
+    <ol>
+        <li>Сделайте форк репозитория с исходными файлами для выполнения проектной работы <a
+                href="https://github.com/Yandex-Practicum/msa-sprint2" target="_blank" rel="noopener">https://github.com/Yandex-Practicum/msa-sprint2</a>.
+        </li>
+        <li>Проект состоит из пяти заданий. Для них в репозитории создана папка <strong>tasks</strong>. Работать над
+            заданиями вы можете в удобном месте. Результаты же сложите в подпапку <strong>results</strong> для каждого
+            из пяти заданий.
+        </li>
+        <li>Когда вы выполните все задания проекта, создайте пул-реквест из веток с результатами заданий в основную
+            ветку вашего репозитория. Убедитесь, что пул-реквест содержит все изменения, которые вы вносили.
+        </li>
+    </ol>
+
+    <h3>Какие инструменты нужны для работы</h3>
+    <p>Для работы над заданиями вам понадобятся:</p>
+    <ul>
+        <li>Docker Compose</li>
+        <li>IDE</li>
+        <li>PlantUML</li>
+    </ul>
+
+    <div class="hw-card__quiz">
+        <p>Приложение написано на Java. Мы понимаем, что не все имеют опыт работы с Java, и поэтому сделали приложение
+            простым и интуитивно понятным. В целом важно понимать, что специалисты, занимающиеся проработкой архитектуры
+            системы, часто осваивают новые для себя технологии. Работа над этим проектом поможет вам легче
+            адаптироваться к будущим задачам с неизвестным стеком.</p>
+    </div>
+
+    <div class="hw-card__task">
+        <p class="hw-card__task-title">Задание 1. Проработка миграции от монолита к микросервисам</p>
+        <div class="hw-card__task-body">
+            <p><strong>Цель задания:</strong> подготовить архитектурный анализ и план начала миграции на микросервисы.
+            </p>
+            <p>Впереди масштабная трансформация — разделение монолитного Java-приложения на независимые сервисы.</p>
+
+            <h2>Что нужно сделать</h2>
+            <p>Изучите текущий код монолита. В директории <strong>architecture</strong> в readme.md вы найдёте описание
+                модулей системы, структуру проекта и список API-эндпоинтов и их поведение.</p>
+            <p><strong>Составьте ADR.</strong> Оно будет описывать целевое состояние системы. Выберите уровень
+                детализации и количество диаграмм и ADR. Подсветите ключевые проблемы — существующие и найденные вами.
+                Предложите опции решений и их дизайн — как решить текущие проблемы. Прописать план миграции — как
+                перейти к целевому состоянию.</p>
+            <p>Поскольку ресурсы ограничены, начать миграцию нужно с одного модуля. Определите, какой модуль это будет,
+                и обоснуйте, почему именно он. Сформулируйте план на основе Strangler Fig.</p>
+            <p><strong>Перед переходом к заданию запустите приложение и базу данных, выполните тесты</strong> (см.
+                tests/readme). Это поможет лучше понять архитектуру системы.</p>
+
+            <div class="hw-card__quiz">
+                <p>Чтобы сдать решение в формате ADR, используйте шаблон из директории readme.</p>
+            </div>
+
+            <p>В README.md лежит дополнительная информация о работе системы и советы по работе над заданиями. Обратите
+                на них внимание.</p>
+
+            <h3>Образ результата</h3>
+            <p><strong>Структура и содержание репозитория, в котором нужно сдать решение:</strong></p>
+            <pre><code>├── ADR/diagram
+└── test-log.txt — выгрузка логов или скриншот проверки API и кодовой базы</code></pre>
+            <p>Загрузите результат в директорию <strong>task1/results/</strong> вашего репозитория.</p>
+        </div>
+    </div>
+
+    <div class="hw-card__task">
+        <p class="hw-card__task-title">Задание 2. Реализация новых сервисов</p>
+        <div class="hw-card__task-body">
+            <p><strong>Цель задания:</strong> начать миграцию сервисов — реализовать сервис бронирования с
+                использованием Kafka.</p>
+            <p>В этом задании вы будете реализовывать один из сервисов системы. Предлагаем сделать это на примере
+                сервиса бронирований <code>BookingService</code>. Вы можете сделать это на любом языке, который вам
+                ближе. Общение между сервисом и остальной системой было решено реализовать через gRPC.</p>
+            <p>Для включения прокси в монолите нужно передать в environment контейнера следующие значения:</p>
+            <pre><code>BOOKING_SERVICE_EXTERNAL_HOST: booking-service
+BOOKING_SERVICE_EXTERNAL_PORT: 9090</code></pre>
+            <p>Вам предстоит реализовать сервис <code>booking-statistics</code> с помощью Kafka. Отдел аналитики
+                передал, что ему нужны данные по бронированиям — по пользователям, по отелям, по дням и так далее.
+                DevOps-инженер не даёт доступ к боевой базе. Статистику нужно посчитать в новом сервисе.</p>
+            <p>Решение — не добавлять дополнительную логику в только что выделенный сервис. Вместо этого — создать
+                отдельный микросервис <code>booking-history-service</code>.</p>
+            <p>Для реализации этого нужно пока добавить Kafka в контейнер монолита: общая сеть ещё не готова.</p>
+            <p>Пример готовой конфигурации есть в <strong>workspace</strong> для <strong>task2</strong>.</p>
+            <pre><code>kafka:
+  image: confluentinc/cp-kafka:7.2.1
+  ports:
+    - "9092:9092"
+  environment:
+    KAFKA_BROKER_ID: 1
+    KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+    KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  networks:
+    - hotelio-net
+zookeeper:
+  image: confluentinc/cp-zookeeper:7.2.1
+  ports:
+    - "2181:2181"
+  environment:
+    ZOOKEEPER_CLIENT_PORT: 2181
+    ZOOKEEPER_TICK_TIME: 2000
+  networks:
+    - hotelio-net</code></pre>
+
+            <h3>Что нужно сделать</h3>
+            <ol>
+                <li><strong>Создайте сервис <code>booking-service</code>.</strong>
+                    <ul>
+                        <li>Использовать booking.proto контракт — расположен в рабочей директории <strong>task2</strong>.
+                        </li>
+                        <li>Подниматься в Docker.</li>
+                        <li>Использовать отдельную базу в Docker (можно выполнить аналогично monolith).</li>
+                        <li>Быть в той же сети.</li>
+                    </ul>
+                    <pre><code>networks:
+  hotelio-net:
+    external: true</code></pre>
+                    <p>В docker-compose файле измените host/port на host/port вашего сервиса (дефолт
+                        localhost:9090).</p>
+                    <p>Измените тесты для <code>booking</code> сервиса так, чтобы они соответствовали вашей текущей
+                        реализации. Тесты расположены в папке <strong>test</strong> в корне проекта.</p>
+                </li>
+                <li><strong>Создайте сервис <code>booking-history-service</code>, читающие из Kafka.</strong> Kafka уже
+                    создаётся в рамках docker-compose.
+                </li>
+                <li><strong>Доработайте <code>booking-service</code>, чтобы он писал события в Kafka.</strong></li>
+                <li><strong>Визуально проверьте появление исторической записи после запуска тестов.</strong> Возможно,
+                    нужно будет добавить тесты.
+                </li>
+            </ol>
+
+            <h3>Образ результата</h3>
+            <ul>
+                <li>При создании бронирования монолит перенаправляет запрос на create booking на указанный gRPC
+                    Server.
+                </li>
+                <li>Запрос списка бронирований в монолите работает так же, как раньше, — будет убран другой командой
+                    позже.
+                </li>
+                <li>В сервисе <code>booking-service</code> реализована вся необходимая логика.</li>
+                <li>Входной точкой для booking-логики становится новый микросервис.</li>
+                <li>Все остальные вызовы остаются в монолите.</li>
+                <li>Логику для остальных сервисов переносить не нужно: данные в микросервисе должны получаться через
+                    REST.
+                </li>
+                <li>Сервис <code>booking-service</code> отправляет событие в Kafka (BookingCreated).</li>
+                <li>Сервис <code>booking-history-service</code> слушает события и формирует статистику асинхронно, без
+                    нагрузки на боевую БД.
+                </li>
+            </ul>
+
+            <p><strong>Структура и содержание репозитория, в котором нужно сдать решение</strong></p>
+            <pre><code>task2/results/
+├── Лог/скриншот `docker ps`
+├── Доработанный regress.sh (мб. init-fixtures)
+├── test-log.txt (проведение тестовых запросов)
+├── select * from bookings из новой системы и старой в текстовом виде после выполнения тестов
+├── README.md с объяснением стратегии миграции данных при запуске нового сервиса и стратегии To Be
+└── листинг бронирований, вызванный через REST из монолита и GRPC из микросервиса
+└── select * из таблицы с историческими данными о бронированиях</code></pre>
+            <p>Загрузите результат в директорию <strong>task2/results/</strong> вашего репозитория.</p>
+        </div>
+    </div>
+
+    <div class="hw-card__task">
+        <p class="hw-card__task-title">Задание 3. Личный кабинет</p>
+        <div class="hw-card__task-body">
+            <p><strong>Цель задания:</strong> GraphQL Federation:</p>
+            <ul>
+                <li>реализовывать federated-сервисы на Node.js,</li>
+                <li>интегрировать внешние сервисы,</li>
+                <li>добавить ACL на уровне GraphQL-поля или запроса.</li>
+            </ul>
+            <p>После первых шагов по выделению модуля бронирования в отдельный gRPC-сервис, команда Hotelio столкнулась
+                с новой задачей: реализовать личный кабинет, обеспечив удобный и быстрый доступ к информации из
+                нескольких доменов сразу — бронирования и отели. Этот модуль важен для расширения бизнеса.</p>
+            <p>Текущие REST-интерфейсы монолита и один gRPC не позволяют гибко агрегировать данные между сервисами без
+                множества последовательных вызовов. Особенно это ощущается при разработке фронтенда.</p>
+            <p>После некоторых решений вы понимаете, что BFF в данном случае просто необходим. Решить такую задачу
+                удобно и гибко лишь на API Gateway будет тяжело.</p>
+            <p>Команда приняла решение перейти к GraphQL-шлюзу, используя Apollo Federation, где каждый домен будет
+                представлен в виде субграф, объединённый в общий суперграф.</p>
+            <p>Предполагается, что в дальнейшем появится полноценный API Gateway, — так что можно сразу думать про
+                разграничение доступа к информации. Например, пользователь не должен увидеть чужие бронирования.</p>
+
+            <h3>Что нужно сделать</h3>
+            <p>Ваша задача — завершить реализацию федеративного GraphQL API с тремя модулями:</p>
+            <ol>
+                <li><strong>В сервисе <code>booking-subgraph</code>:</strong>
+                    <ul>
+                        <li>Бронирования возвращаются по userId.</li>
+                        <li>Есть поля: id, userId, hotelId, promoCode, discountPercent.</li>
+                        <li>Необходимо заменить заглушки на реальные вызовы (например, к базе, REST, gRPC).</li>
+                        <li>Нужно реализовать ACL, чтобы пользователь мог видеть только свои бронирования.</li>
+                    </ul>
+                </li>
+                <li><strong>Сервис <code>hotel-subgraph</code>:</strong>
+                    <ul>
+                        <li>Возвращает описание отелей.</li>
+                        <li>Используется для hotel { ... } внутри бронирования.</li>
+                        <li>Должен уметь обращаться к внешнему API или сервису.</li>
+                        <li>Должно быть разрешено __resolveReference через ID.</li>
+                    </ul>
+                </li>
+                <li><strong>Сервис <code>apollo-gateway</code>:</strong>
+                    <ul>
+                        <li>Агрегирует схемы booking и hotel.</li>
+                        <li>Проксирует запросы к нужным подграфам.</li>
+                        <li>Если сервисы работают, менять это не надо.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Образ результата</h3>
+            <p><strong>Структура проекта:</strong></p>
+            <pre><code>task3/
+├── booking-subgraph/
+│   ├── index.js               // TODO: заменить заглушки на вызовы
+│   └── ...
+├── hotel-subgraph/
+│   ├── index.js               // TODO: заменить заглушки на вызовы
+│   └── ...
+├── apollo-gateway/
+│   ├── index.js               // Gateway-конфигурация
+│   └── ...
+├── docker-compose.yml         // Запускает все 3 модуля
+└── README.md</code></pre>
+
+            <p><strong>Что можно использовать вместо внешнего вызова</strong></p>
+            <p>Если у вас нет готового API — вставьте заглушку вида:</p>
+            <pre><code>return [
+  {
+    id: 'b1',
+    userId,
+    hotelId: 'h1',
+    discountPercent: 20,
+    promoCode: 'SUMMER',
+  },
+];</code></pre>
+            <p>Но лучше попробовать подставить REST/gRPC-вызов из прошлого задания.</p>
+
+            <p><strong>Подсказки:</strong></p>
+            <ul>
+                <li>Все заголовки передаются из API Gateway в подграфы автоматически.</li>
+                <li>Для реализации ACL проверяйте req.headers['userid'] в резолверах.</li>
+                <li>Если пользователь не авторизован, не возвращайте бронирование.</li>
+                <li>При использовании реальных модулей не забудьте использовать одну и ту же сеть в Docker.</li>
+            </ul>
+
+            <p><strong>Структура и содержание репозитория, в котором нужно сдать решение:</strong></p>
+            <pre><code>task3/results/
+├── Report с описанием внесённых изменений
+├── Результат docker ps
+├── Скриншот успешного вызова
+├── Скриншот Deny по ACL
+└── Логи booking-subgraph после двух запросов (или всех контейнеров через docker-compose up --build)</code></pre>
+            <p>Загрузите результат в директорию <strong>task3/results/</strong> вашего репозитория.</p>
+        </div>
+    </div>
+
+    <div class="hw-card__task">
+        <p class="hw-card__task-title">Задание 4. Автоматизация развёртывания и тестирования</p>
+        <div class="hw-card__task-body">
+            <p><strong>Цель задания:</strong> ускорить доставку фич, уменьшить количество ошибок при выкладке и
+                упростить масштабирование в Kubernetes.</p>
+            <p>После успешного запуска первых двух микросервисов — <code>booking</code> и
+                <code>booking-statistics</code> — и их интеграции в GraphQL-суперграф, компания Hotelio поняла, что
+                ручное развёртывание и тестирование больше не выдерживает темпа изменений. Руководство дало зелёный свет
+                на автоматизацию.</p>
+
+            <h3>Что нужно сделать</h3>
+            <ol>
+                <li><strong>Реализовать Docker-образ сервиса.</strong>
+                    <ul>
+                        <li>В рабочей директории задания сделан простой Mock-сервис для понимания работы фича-флагов.
+                        </li>
+                        <li>Для него сделан драфт Helm-чартов и тестов.</li>
+                        <li>Mock-сервис заменён на вашу реализацию.</li>
+                    </ul>
+                    <p>Дополнительно о реализации сервиса:</p>
+                    <ul>
+                        <li>собирается с помощью docker build,</li>
+                        <li>сделаны healtcheck endpoint,</li>
+                        <li>сделан ready endpoint,</li>
+                        <li>поведение сервиса меняется при наличии переменной ENABLE_FEATURE_X=true.</li>
+                    </ul>
+                </li>
+                <li><strong>Реализовать Helm-чарт.</strong>
+                    <ul>
+                        <li>Deployment с пробами: livenessProbe и readinessProbe по /ping.</li>
+                        <li>Service типа ClusterIP (порт 80 → targetPort 8080).</li>
+                        <li>Значения из values.yaml:
+                            <ul>
+                                <li>replicaCount;</li>
+                                <li>image.name, image.tag, image.pullPolicy;</li>
+                                <li>env[] — переменные окружения;</li>
+                                <li>resources — requests и limits;</li>
+                                <li>ENABLE_FEATURE_X — фича-флаг.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="hw-card__quiz">
+                        <p>Обязательно сделайте два варианта values.yaml: для staging и prod.</p>
+                    </div>
+                </li>
+                <li><strong>Реализовать CI/CD-пайплайн (.gitlab-ci.yml).</strong>
+                    <p>Стадии:</p>
+                    <ul>
+                        <li>build: docker build</li>
+                        <li>test: docker run, проверка /ping, docker rm.</li>
+                        <li>deploy: minikube image load и helm upgrade</li>
+                        <li>tag: создать git-тег с timestamp</li>
+                    </ul>
+                    <p>Если есть unit-тесты, нужно добавить отдельный шаг для их запуска.</p>
+                    <div class="hw-card__quiz">
+                        <p>Используйте gitlab-ci-local: gitlab-ci-local build test deploy tag.</p>
+                    </div>
+                </li>
+                <li><strong>Реализовать Service Discovery через DNS.</strong>
+                    <ul>
+                        <li>Проверка: <a href="http://booking-service/ping" target="_blank" rel="noopener">http://booking-service/ping</a>
+                            работает из другого пода внутри Minikube. Ниже есть инструкция по установке Minikube.
+                        </li>
+                        <li>Используйте скрипт check-dns.sh.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <div class="hw-card__quiz">
+                <p>💡 В локальной разработке быстрее тестировать helm/gitlab-ci локально, без деплоя в реальное боевое
+                    окружение. Но тестирование полного флоу локально обычно затрудняется отсутствием Docker
+                    Registry.</p>
+                <p>Конфигурация для эмуляции (через Docker Container Registry или Minikube Registry) будет отличаться в
+                    зависимости от используемого окружения — Linux, Mac OS или Windows gitbash/wsl2/wsl — из-за разницы
+                    в виртуализации и сложности с конфигурацией. Поэтому универсального решения для такого нет.</p>
+                <p>В этом проекте не используется Docker Registry: для работы был выбран более простой способ — прямая
+                    загрузка образа в Minikube через load. В боевой конфигурации <code>helm install</code> просто будет
+                    выполняться не локально, а на хосте — потому для изменения работы достаточно будет просто удалить
+                    строку с <code>minikube load</code>. Так реализуется лёгкое переключение с тестового режима на
+                    боевой.</p>
+            </div>
+
+            <h3>Образ результата</h3>
+            <p><strong>Структура проекта:</strong></p>
+            <pre><code>task4/
+├── booking-service/ # REST-сервис (Go/Java/etc)
+├── helm/
+│ └── booking-service/ # Helm-чарт сервиса (требуется доработка)
+├── .gitlab-ci.yml # CI/CD-пайплайн (требуется доработка)
+├── check-dns.sh # Проверка DNS внутри кластера
+├── check-status # Статус деплоя и curl локально
+├── README.md</code></pre>
+
+            <p><strong>Dockerfile для каждого микросервиса</strong></p>
+            <ul>
+                <li>helm/-директория с чартами.</li>
+                <li>.gitlab-ci.yml с пайплайном.</li>
+                <li>README.md с инструкцией по разворачиванию в Minikube.</li>
+                <li>Логика обнаружения сервисов (DNS).</li>
+                <li>Пример успешного деплоя в Kubernetes (скриншот или вывод команды get pods + get services).</li>
+            </ul>
+
+            <p><strong>Структура и содержание репозитория, в котором нужно сдать решение:</strong></p>
+            <pre><code>task4/results/
+├── report.md # Описание изменений и решений
+├── values-staging.yaml
+├── values-prod.yaml
+├── .gitlab-ci.yml
+├── Скриншот успешного curl на /ping
+├── Скриншот ./check-dns.sh
+├── Скриншот ./check-status
+├── kubectl get pods + get services
+├── Лог успешной сборки
+└── docker image ls + minikube image list</code></pre>
+            <p>Загрузите результат в директорию <strong>task4/results/</strong> вашего репозитория.</p>
+        </div>
+    </div>
+
+    <div class="hw-card__task">
+        <p class="hw-card__task-title">Задание 5. Настройка управления трафиком с Istio</p>
+        <div class="hw-card__task-body">
+            <p><strong>Цель задания:</strong> настроить маршрутизацию трафика с Istio.</p>
+            <p>После настройки CI/CD и развёртывания микросервисов в Kubernetes, команда Hotelio столкнулась с новой
+                задачей: управление трафиком на продакшне.</p>
+            <p>Компания хочет тестировать фичи без риска, быстрее находить проблемные сервисы и управлять отказами без
+                изменений в бизнес-коде.</p>
+            <p>Было решено установить Istio как Service Mesh и начать использовать трафик-менеджмент: канареечный
+                Release, Circuit Breaker и другие механики. И начать, конечно же, с уже перенесённого в Kubernetes
+                сервиса бронирования.</p>
+
+            <h3>Что нужно сделать</h3>
+            <ol>
+                <li><strong>Скопируйте выполненный task4 в task5.</strong> Примените тот же сервис
+                    <code>booking-service</code>, только теперь добавьте для него Istio Service Mesh.
+                </li>
+                <li><strong>Установите Istio:</strong>
+                    <ul>
+                        <li>Установите Istio в Minikube, используя <code>istioctl install --set profile=demo</code>.
+                        </li>
+                        <li>Включите автоматическую инъекцию Istio в default namespace, чтобы каждый под автоматически
+                            получал sidecar-прокси (Envoy).
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Добавьте две версии сервиса:</strong>
+                    <ul>
+                        <li>v1 — основная версия сервиса.</li>
+                        <li>v2 — новая версия с возможностью включения фича-флагов через <code>X-Feature-Enabled:
+                            true</code> в заголовке запроса.
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Настройте Istio-маршрутизацию:</strong>
+                    <ul>
+                        <li>Разделите трафик между версиями через канареечный Release (90% трафика на v1, 10% на v2).
+                        </li>
+                        <li>Добавьте fallback-маршрут, который будет перенаправлять трафик с v1 на v2, если v1
+                            возвращает ошибку.
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Настройте Retry и Circuit Breaking.</strong> Используйте DestinationRule для настройки
+                    Retries и Circuit Breaking для защиты от ошибок.
+                </li>
+                <li><strong>Настройте фича-флаги через EnvoyFilter.</strong> Примените EnvoyFilter, чтобы включить
+                    маршрутизацию трафика на v2, если заголовок запроса X-Feature-Enabled равен true.
+                </li>
+                <li><strong>Проверьте настройки с помощью скриптов (уже лежат в папке с заданием):</strong>
+                    <ul>
+                        <li>check-istio.sh — для проверки установки Istio и инъекции.</li>
+                        <li>check-canary.sh — для тестирования разделения трафика (90% на v1, 10% на v2).</li>
+                        <li>check-fallback.sh — для тестирования fallback маршрута. Предварительно, погасите один из
+                            подов.
+                        </li>
+                        <li>check-feature-flag.sh — для проверки маршрутизации через фича-флаг.</li>
+                    </ul>
+                    <p>Скрипты можно модифицировать.</p>
+                </li>
+            </ol>
+
+            <h3>Образ результата</h3>
+            <p><strong>Структура и содержание репозитория, в котором нужно сдать решение:</strong></p>
+            <pre><code>task5/results/
+├── report.md # Описание изменений и решений
+├── values-v1.yaml и values-v2.yaml с разными конфигурациями сервиса
+├── virtual-service.yaml (canary + fallback + feature flag)
+├── destination-rule.yaml (Retry + CircuitBreaking)
+├── envoy-filter.yaml (Feature flag через EnvoyFilter)
+└── Логи запуска проверочных скриптов (или Скриншоты)</code></pre>
+            <p>Загрузите результат в директорию <strong>task5/results/</strong> вашего репозитория.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
