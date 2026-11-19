@@ -1,0 +1,26 @@
+@startuml
+!theme plain
+actor Клиент
+participant "API Gateway" as GW
+participant "booking-service" as BS
+participant "user-service" as US
+participant "hotel-service" as HS
+participant "promocode-service" as PS
+participant "review-service" as RS
+queue Kafka
+database "booking_db" as DB
+
+Клиент -> GW : POST /bookings (Idempotency-Key)
+GW -> BS : gRPC CreateBooking
+BS -> US : gRPC CheckUser
+BS -> HS : gRPC CheckHotel
+BS -> PS : gRPC CheckPromo
+BS -> RS : gRPC CheckReviews
+alt ReviewService недоступен
+  BS -> BS : fallback (пропустить проверку, REL-1)
+end
+BS -> DB : INSERT booking
+BS -> Kafka : publish BookingCreated
+BS --> GW : BookingResponse
+GW --> Клиент : 201 Created
+@enduml

@@ -1,0 +1,55 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+
+actor "Клиент" as Client
+
+node "API Gateway" as GW
+node "Apollo Gateway" as Apollo
+package "Субграфы" {
+  [booking-subgraph] as BS
+  [hotel-subgraph] as HS
+}
+
+package "Java Spring Boot монолит" {
+  [API (REST)] as API
+  [UserService] as User
+  [HotelService] as Hotel
+  [PromoCodeService] as Promo
+  [ReviewService] as Review
+}
+database "PostgreSQL (монолит)" as DB
+
+package "Новые сервисы" {
+  [booking-service] as Booking
+  [booking-history-service] as History
+}
+database "booking_db" as DB1
+database "history_db" as DB2
+queue "Kafka" as Kafka
+
+Client --> GW
+GW --> Apollo
+GW --> API : GET /bookings
+GW --> Booking : POST /bookings
+Apollo --> BS
+Apollo --> HS
+BS --> Booking
+HS --> Hotel
+Booking --> User : REST (прокси)
+Booking --> Hotel : REST (прокси)
+Booking --> Promo : REST (прокси)
+Booking --> Review : REST (прокси)
+Booking --> DB1
+Booking --> Kafka : BookingCreated
+Kafka --> History
+History --> DB2
+API --> User
+API --> Hotel
+API --> Promo
+API --> Review
+User --> DB
+Hotel --> DB
+Promo --> DB
+Review --> DB
+@enduml
