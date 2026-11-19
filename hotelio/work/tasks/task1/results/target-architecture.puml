@@ -1,0 +1,60 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+
+actor "Клиент" as Client
+
+node "API Gateway\n(ACL, rate limit)" as GW
+node "Apollo Gateway\n(GraphQL Federation)" as Apollo
+
+package "Субграфы (Node.js)" {
+  [booking-subgraph] as BS
+  [hotel-subgraph] as HS
+}
+
+package "Микросервисы (Java)" {
+  [booking-service] as Booking
+  [hotel-service] as Hotel
+  [user-service] as User
+  [promocode-service] as Promo
+  [review-service] as Review
+  [booking-history-service] as History
+}
+
+queue "Kafka\n(BookingCreated, ...)" as Kafka
+
+database "booking_db" as DB1
+database "hotel_db" as DB2
+database "user_db" as DB3
+database "promo_db" as DB4
+database "review_db" as DB5
+database "history_db" as DB6
+
+cloud "Istio Service Mesh\n(canary, retry, circuit breaking, mTLS)" as Istio
+
+Client --> GW
+GW --> Apollo
+GW --> Booking : REST
+Apollo --> BS
+Apollo --> HS
+BS --> Booking : gRPC/REST
+HS --> Hotel : gRPC/REST
+Booking --> Hotel : gRPC
+Booking --> User : gRPC
+Booking --> Promo : gRPC
+Booking --> Review : gRPC
+Booking --> Kafka : publish
+Kafka --> History : consume
+Booking --> DB1
+Hotel --> DB2
+User --> DB3
+Promo --> DB4
+Review --> DB5
+History --> DB6
+
+Booking ..> Istio
+Hotel ..> Istio
+User ..> Istio
+Promo ..> Istio
+Review ..> Istio
+@enduml

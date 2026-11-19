@@ -1,0 +1,18 @@
+@startuml
+!theme plain
+start
+:Этап 0. Подготовка\n(Kafka, сеть, CI/CD-скелет);
+:Этап 1. booking-service\n(gRPC + своя БД + Kafka);
+:Этап 2. booking-history-service\n(Kafka consumer);
+:Этап 3. Интеграция и canary\n(10% → 50% → 100%);
+if (Метрики в норме?) then (да)
+  :Этап 4. GraphQL Federation\n(личный кабинет + ACL);
+  :Этап 5. CI/CD + Kubernetes\n(Helm, DNS, фича-флаги);
+  :Этап 6. Istio\n(canary, fallback, retry, CB);
+  :Этап 7. Очистка монолита\nи вынос остальных сервисов;
+else (нет)
+  :Rollback\n(feature flag off);
+  stop
+endif
+stop
+@enduml
