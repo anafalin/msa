@@ -1,0 +1,86 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+
+title C4 Code: Вариант Б - Сервисы аналитики и оповещения
+
+package "Videoanalizator Service" {
+
+    class VideoanalizatorService {
+        - rtspUrl : String
+        + initialize() : void
+        + analyzeStream() : void
+    }
+
+    class MlInferenceEngine {
+        - modelPath : String
+        - device : String
+        + loadModel() : void
+        + infer(imageTensor: Tensor) : DetectionResult
+    }
+
+    class NodeRedClient {
+        - webhookUrl : String
+        + triggerWorkflow(payload: JSON) : Response
+    }
+
+    class AlertEvent {
+        + source : String
+        + severity : Severity
+        + message : String
+        + imageS3Key : String
+    }
+
+    class RabbitMqProducer {
+        - connection : Connection
+        + sendEvent(queueName: String, event: AlertEvent) : void
+    }
+
+    VideoanalizatorService --> MlInferenceEngine : uses
+    VideoanalizatorService --> NodeRedClient : triggers
+    VideoanalizatorService ..> AlertEvent : creates
+    VideoanalizatorService --> RabbitMqProducer : publishes
+}
+
+package "Alerting Service" {
+
+    class AlertingService {
+        + startListening() : void
+        - handleIncomingEvent(event: AlertEvent) : void
+    }
+
+    interface NotificationStrategy <<interface>> {
+        + send(alert: AlertEvent) : void
+    }
+
+    class TelegramNotifier {
+        - botToken : String
+        - chatId : String
+        + send(alert: AlertEvent) : void
+    }
+
+    class SmsNotifier {
+        - apiKey : String
+        + send(alert: AlertEvent) : void
+    }
+
+    class LocalBuzzerController {
+        - deviceId : String
+        + activateBuzzer() : void
+    }
+
+    class RabbitMqConsumer {
+        + subscribe(queueName: String, callback: Function) : void
+    }
+
+    AlertingService --> RabbitMqConsumer : uses
+    AlertingService --> NotificationStrategy : delegates
+    NotificationStrategy <|.. TelegramNotifier : implements
+    NotificationStrategy <|.. SmsNotifier : implements
+    NotificationStrategy <|.. LocalBuzzerController : implements
+}
+
+RabbitMqProducer --> RabbitMqConsumer : AMQP (RabbitMQ)
+
+@enduml
