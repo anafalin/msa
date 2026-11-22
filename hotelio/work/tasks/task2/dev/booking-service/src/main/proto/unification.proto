@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_package = "com.example.grpc.proto";
+option java_multiple_files = true;
+option java_outer_classname = "UnificationProto";
+
+// Универсальный ответ с булевым значением
+message BooleanResponse {
+  bool value = 1;
+}

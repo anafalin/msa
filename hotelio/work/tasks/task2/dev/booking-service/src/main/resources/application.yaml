@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: booking-service
+
+  grpc:
+    server:
+      port: 9090
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAMEg}
+    password: ${SPRING_DATASOURCE_PASSWORDg}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate.hibernate.format_sql: false
+
+monolith:
+  port: ${MONOLITH_EXTERNAL_PORT}
+  host: ${MONOLITH_EXTERNAL_HOST}

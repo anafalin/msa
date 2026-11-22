@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_package = "com.example.grpc.proto";
+option java_multiple_files = true;
+option java_outer_classname = "PromoCodeProto";
+
+service PromoCodeService {
+  rpc validate (PromoValidateRequest) returns (PromoResponse) {}
+}
+
+// Запрос на проверку валидности промокода
+message PromoValidateRequest {
+  string code = 1;
+  string userId = 2;
+}
+
+// Ответ на запрос проверки валидности запроса
+message PromoResponse {
+  string code = 1;
+  double discountPercent = 2;
+  bool active = 3;
+  bool vipOnly = 4;
+}
