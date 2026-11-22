@@ -1,0 +1,25 @@
+syntax = "proto3";
+import "unification.proto";
+
+option java_package = "com.example.grpc.proto";
+option java_multiple_files = true;
+option java_outer_classname = "HotelProto";
+
+service HotelService {
+  rpc getHotelById (HotelIdRequest) returns (HotelResponse) {}
+  rpc isHotelOperational (HotelIdRequest) returns (BooleanResponse) {}
+  rpc isHotelFullyBooked (HotelIdRequest) returns (BooleanResponse) {}
+}
+
+// Запрос на получение отеля по hotelId
+message HotelIdRequest {
+  string hotel_id = 1;
+}
+
+// Отель
+message HotelResponse {
+  string id = 1;
+  string name = 2;
+  string city = 3;
+  double rating = 4;
+}
