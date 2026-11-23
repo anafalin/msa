@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 import java.time.Instant
 
 @Entity
-class Booking constructor(
+class Booking(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 

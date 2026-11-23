@@ -10,9 +10,9 @@ spring:
       port: 9090
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAMEg}
-    password: ${SPRING_DATASOURCE_PASSWORDg}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/booking}
+    username: ${SPRING_DATASOURCE_USERNAME:booking}
+    password: ${SPRING_DATASOURCE_PASSWORD:booking}
 
   jpa:
     hibernate:
@@ -21,6 +21,14 @@ spring:
     properties:
       hibernate.hibernate.format_sql: false
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      properties:
+        spring.json.type.mapping: bookingEvent:com.hotelio.bookingservice.mq.BookingEventDto
+
 monolith:
-  port: ${MONOLITH_EXTERNAL_PORT}
-  host: ${MONOLITH_EXTERNAL_HOST}
+  port: ${MONOLITH_EXTERNAL_PORT:9094}
+  host: ${MONOLITH_EXTERNAL_HOST:localhost}

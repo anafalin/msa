@@ -1,4 +1,4 @@
-package com.hotelio.bookingservice.config
+package com.hotelio.bookingservice.grpc
 
 import com.example.grpc.proto.AppUserServiceGrpc
 import com.example.grpc.proto.HotelServiceGrpc

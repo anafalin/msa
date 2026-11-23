@@ -2,6 +2,7 @@ package com.hotelio.bookingservice.service
 
 import com.hotelio.bookingservice.entity.Booking
 import com.hotelio.bookingservice.entity.PromoCode
+import com.hotelio.bookingservice.mq.toEvent
 import com.hotelio.bookingservice.repository.BookingRepository
 import java.util.Optional
 import java.util.function.Function
@@ -12,11 +13,12 @@ import org.springframework.stereotype.Service
 
 @Service
 class BookingService(
-    final val bookingRepository: BookingRepository,
-    final val promoCodeService: PromoCodeService,
-    final val reviewService: ReviewService,
-    final val userService: AppUserService,
-    final val hotelService: HotelService,
+    private final val bookingRepository: BookingRepository,
+    private final val promoCodeService: PromoCodeService,
+    private final val reviewService: ReviewService,
+    private final val userService: AppUserService,
+    private final val hotelService: HotelService,
+    private final val sendBookingEvent: SendBookingEvent,
 ) {
 
     companion object {
@@ -55,8 +57,9 @@ class BookingService(
             discountPercent = discount,
             price = finalPrice,
         )
-
-        return bookingRepository.save(booking)
+        val savedBooking = bookingRepository.save(booking)
+        sendBookingEvent(savedBooking.toEvent())
+        return savedBooking
     }
 
     private fun validateUser(userId: String) {

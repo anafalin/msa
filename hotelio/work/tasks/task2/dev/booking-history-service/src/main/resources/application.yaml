@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: hotelio-statistic
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5434/hoteliostat}
+    username: ${SPRING_DATASOURCE_USERNAME:hoteliostat}
+    password: ${SPRING_DATASOURCE_PASSWORD:hoteliostat}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate.hibernate.format_sql: false
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: booking-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+    properties:
+      spring.json.type.mapping: bookingEvent:com.hotelio.bookinghistoryservice.mq.BookingEventDto
+      spring.json.trusted.packages: "com.hotelio.bookinghistoryservice.mq"
+    listener:
+      ack-mode: record
