@@ -55,13 +55,12 @@ class BookingGrpcService(
         request: BookingListRequest,
         responseObserver: StreamObserver<BookingListResponse>,
     ) {
-        if (request.userId.isBlank()) {
-            createResponseInvalidArgument(responseObserver, "userId: must not be blank")
-            return
-        }
-
         try {
-            val bookings = bookingService.listAll(request.userId).map { it.toBookingResponse() }
+            val bookings = if(request.userId.isBlank()) {
+                bookingService.listAll(null)
+            } else {
+                bookingService.listAll(request.userId)
+            }.map { it.toBookingResponse() }
 
             val response = BookingListResponse.newBuilder()
                 .addAllBookings(bookings)

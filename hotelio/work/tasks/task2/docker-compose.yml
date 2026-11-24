@@ -21,7 +21,7 @@ services:
 
   monolith-db:
     image: postgres:15
-    container_name: hotelio-db
+    container_name: hotelio-monolith-db
     environment:
       POSTGRES_USER: hotelio
       POSTGRES_PASSWORD: hotelio
@@ -84,7 +84,7 @@ services:
 
   hoteliostat-db:
     image: postgres:15
-    container_name: hoteliostat-db
+    container_name: hotelio-hoteliostat-db
     environment:
       POSTGRES_USER: hoteliostat
       POSTGRES_PASSWORD: hoteliostat
@@ -105,23 +105,26 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://hotelio-kafka:9092,EXTERNAL://localhost:29092
+      # Внутренний листенер переводим на 29092 (куда уже стучатся все сервисы)
+      # Внешний листенер переводим на 9092 (для подключений с хоста через localhost:9092)
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://hotelio-kafka:29092,EXTERNAL://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - hotelio-net
 
+
   kafka-ui:
-    container_name: kafka-ui
+    container_name: hotelio-kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
       - 7070:8080
     environment:
       DYNAMIC_CONFIG_ENABLED: true
       KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: hotelio-kafka:9092
     networks:
       - hotelio-net
 

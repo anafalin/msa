@@ -47,7 +47,6 @@
 ## 🧪 Пример запуска
 
 ```bash
-docker build --no-cache -t hotelio-tester .
 docker run --rm --add-host=host.docker.internal:host-gateway \
   -e DB_HOST=host.docker.internal \
   -e DB_PORT=5432 \
