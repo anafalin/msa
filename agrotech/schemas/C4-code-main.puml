@@ -1,0 +1,128 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam nodesep 50
+skinparam ranksep 50
+
+title C4 Code: Вариант А - Актуальная архитектура
+
+package "Edge Контур (Агент фермы)" {
+
+    package "Controllers (Адаптеры)" {
+        class VideoController {
+            - streamUrl : String
+            - cameraId : UUID
+            + startProcessing() : void
+            + stopProcessing() : void
+        }
+
+        class TelemetryController {
+            + readSensorData() : List<SensorData>
+        }
+
+        class CommandController {
+            + sendCommandToDevice(deviceId: String, cmd: Command) : void
+            + receiveAck(deviceId: String) : Ack
+        }
+    }
+
+    class ServiceLayer {
+        - confidenceThreshold : float
+        + processVideoFrame(frame: Frame) : void
+        + processTelemetry(data: List<SensorData>) : void
+        + executeCommand(cmd: Command) : void
+    }
+
+    interface ICameraStream <<interface>> {
+        + openStream(url: String) : Stream
+        + readFrame() : Frame
+    }
+
+    interface IMlModel <<external>> {
+        + predict(frame: Frame) : PredictionResult
+    }
+
+    interface IEventPublisher <<interface>> {
+        + publish(event: Event) : void
+    }
+
+    interface IStorageClient <<interface>> {
+        + saveVideoFile(frame: Frame, metadata: JSON) : void
+    }
+
+    class FrameProcessor {
+        + extractFeatures(frame: Frame) : Features
+        + annotateFrame(frame: Frame, result: PredictionResult) : Frame
+    }
+
+    class EventDTO {
+        + cameraId : UUID
+        + timestamp : DateTime
+        + eventType : String
+        + metadata : JSON
+    }
+
+    ' Связи на Edge
+    VideoController --> ServiceLayer : delegates
+    TelemetryController --> ServiceLayer : delegates
+    CommandController --> ServiceLayer : delegates
+
+    ServiceLayer ..> ICameraStream : uses
+    ServiceLayer ..> IMlModel : calls
+    ServiceLayer --> FrameProcessor : uses
+    ServiceLayer ..> IEventPublisher : publishes
+    ServiceLayer ..> IStorageClient : saves
+    ServiceLayer ..> EventDTO : creates
+}
+
+package "Центральный сервер (Облако)" {
+
+    package "Data Ingestion (Прием данных)" {
+        class DataReceiver {
+            - queueName : String
+            + startListening() : void
+            - handleIncomingMessage(msg: JSON) : void
+        }
+    }
+
+    package "Outbound Sync (Синхронизация наружу)" {
+        class SyncTask {
+            + scheduleSync() : void
+        }
+
+        class SyncComponent {
+            + exportToCorporate() : void
+        }
+    }
+
+    package "Repositories & Adapters (Инфраструктура)" {
+        interface MetricsRepository <<interface>> {
+            + saveMetrics(metrics: List<Metric>) : void
+            + getUnsyncedMetrics() : List<Metric>
+        }
+
+        class TimescaleDbRepository {
+            + saveMetrics(metrics: List<Metric>) : void
+            + getUnsyncedMetrics() : List<Metric>
+        }
+
+        class S3StorageClient {
+            + downloadFile(s3Key: String) : File
+        }
+
+        class KafkaProducer {
+            + sendMessage(topic: String, msg: JSON) : void
+        }
+    }
+
+    ' Связи в Облаке
+    DataReceiver --> MetricsRepository : saves >
+    MetricsRepository <|.. TimescaleDbRepository : implements
+
+    SyncTask --> SyncComponent : initiates >
+    SyncComponent --> MetricsRepository : reads >
+    SyncComponent --> S3StorageClient : reads >
+    SyncComponent --> KafkaProducer : sends >
+}
+@enduml
