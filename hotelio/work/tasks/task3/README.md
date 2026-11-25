@@ -3,7 +3,7 @@
 Ознакомьтесь с предложенной структурой.
 В дальнейшем поднять сервис можно будет с помощью:
 ```bash
-docker compose up -d --build
+docker compose build --no-cache
 ```
 ---
 

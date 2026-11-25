@@ -124,11 +124,11 @@ Java Spring Boot, PostgreSQL).
 
 ### 3.4 Целевая архитектура
 
-![Целевая архитектура](diagram/target-architecture.png)
+![Целевая архитектура](target-architecture.png)
 
 ### 3.5 Промежуточное состояние (через 2 месяца)
 
-![Промежуточное состояние](diagram/intermediate-architecture.png)
+![Промежуточное состояние](intermediate-architecture.png)
 
 На этом этапе:
 
